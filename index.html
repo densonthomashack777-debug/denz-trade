@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Denz Trade</title>
+<meta name="theme-color" content="#0A0C10">
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0C10;
+    --surface:#13161D;
+    --surface-2:#191D26;
+    --border:#252A34;
+    --border-soft:#1D212A;
+    --gold:#C9A961;
+    --gold-dim:#8A7743;
+    --text:#E9E7E2;
+    --text-dim:#8B909C;
+    --text-faint:#565C68;
+    --win:#4ADE9C;
+    --win-bg:rgba(74,222,156,0.09);
+    --loss:#F0656B;
+    --loss-bg:rgba(240,101,107,0.09);
+    --be:#E8B84B;
+    --be-bg:rgba(232,184,75,0.09);
+    --open:#5B9EE8;
+    --open-bg:rgba(91,158,232,0.09);
+    --asian:#7C9CE8;
+    --london:#B48EE8;
+    --ny:#E89C5B;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(201,169,97,0.06), transparent),
+      var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding:28px 20px 80px;
+    min-height:100vh;
+  }
+  .mono{font-family:'JetBrains Mono',monospace;}
+  .wrap{max-width:920px;margin:0 auto;}
+
+  /* Header */
+  header{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:22px;}
+  .brand-eyebrow{font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:4px;}
+  h1{margin:0;font-size:26px;font-weight:800;letter-spacing:-0.02em;}
+  .sub{color:var(--text-dim);font-size:13px;margin-top:4px;}
+  .new-btn{
+    background:var(--gold);color:#12100A;border:none;padding:11px 18px;border-radius:9px;
+    font-weight:700;font-size:13.5px;cursor:pointer;font-family:'Inter',sans-serif;
+    display:flex;align-items:center;gap:7px;transition:transform .12s ease, box-shadow .12s ease;
+    box-shadow:0 0 0 rgba(201,169,97,0);
+  }
+  .new-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(201,169,97,0.25);}
+  .new-btn:active{transform:translateY(0);}
+  .export-btn{
+    background:var(--surface);color:var(--text-dim);border:1px solid var(--border);padding:11px 16px;border-radius:9px;
+    font-weight:600;font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;
+    display:flex;align-items:center;gap:7px;transition:all .15s ease;
+  }
+  .export-btn:hover{border-color:var(--gold-dim);color:var(--text);}
+
+  .viewtabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:4px;margin-bottom:18px;width:fit-content;}
+  .viewtab{
+    background:none;border:none;color:var(--text-dim);padding:8px 16px;border-radius:7px;
+    font-size:12.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;
+  }
+  .viewtab.active{background:var(--surface-2);color:var(--gold);}
+
+  .daypage{display:none;}
+  .daypage.show{display:block;}
+  .dayrow{
+    display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--border);
+    border-radius:11px;padding:14px 16px;margin-bottom:8px;
+  }
+  .dayname{width:88px;flex-shrink:0;font-weight:700;font-size:13.5px;}
+  .daybar-wrap{flex:1;height:10px;background:var(--surface-2);border-radius:6px;overflow:hidden;position:relative;}
+  .daybar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg, var(--gold-dim), var(--gold));transition:width .3s ease;}
+  .daybar-fill.nodata{background:var(--border);}
+  .daystats{flex-shrink:0;display:flex;align-items:center;gap:14px;width:230px;justify-content:flex-end;}
+  .daystat-item{text-align:right;font-family:'JetBrains Mono',monospace;}
+  .daystat-item .v{font-size:14px;font-weight:700;}
+  .daystat-item .l{font-size:9.5px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.05em;}
+  .day-empty-note{font-size:11px;color:var(--text-faint);}
+
+  /* Stats bar */
+  .stats{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+    background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;
+    margin-bottom:18px;
+  }
+  .stat{background:var(--surface);padding:14px 16px;}
+  .stat-label{font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint);margin-bottom:6px;}
+  .stat-value{font-size:20px;font-weight:700;font-family:'JetBrains Mono',monospace;}
+  .stat-value.win{color:var(--win);}
+  .stat-value.loss{color:var(--loss);}
+  @media (max-width:640px){.stats{grid-template-columns:repeat(2,1fr);}}
+
+  /* Filters */
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;}
+  .pill{
+    background:var(--surface);border:1px solid var(--border);color:var(--text-dim);
+    padding:7px 13px;border-radius:100px;font-size:12.5px;font-weight:600;cursor:pointer;
+    transition:all .15s ease;font-family:'JetBrains Mono',monospace;
+  }
+  .pill:hover{border-color:var(--gold-dim);color:var(--text);}
+  .pill.active{background:var(--gold);border-color:var(--gold);color:#12100A;}
+
+  /* Cards grid */
+  .cards{display:flex;flex-direction:column;gap:10px;}
+  .empty{
+    text-align:center;padding:60px 20px;color:var(--text-faint);border:1px dashed var(--border);
+    border-radius:12px;font-size:13.5px;
+  }
+  .empty b{color:var(--text-dim);display:block;margin-bottom:6px;font-size:15px;}
+
+  .card{
+    background:var(--surface);border:1px solid var(--border);border-radius:11px;
+    padding:14px 16px 14px 14px;display:flex;gap:14px;align-items:flex-start;
+    border-left:3px solid var(--asian);position:relative;
+  }
+  .card.sess-London{border-left-color:var(--london);}
+  .card.sess-NY{border-left-color:var(--ny);}
+  .card.sess-Asian{border-left-color:var(--asian);}
+
+  .card-main{flex:1;min-width:0;}
+  .card-top{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:7px;}
+  .pair{font-weight:700;font-size:15px;letter-spacing:-0.01em;}
+  .dir{
+    font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:5px;letter-spacing:0.03em;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .dir.Buy{background:var(--win-bg);color:var(--win);}
+  .dir.Sell{background:var(--loss-bg);color:var(--loss);}
+  .session-tag{font-size:11px;color:var(--text-faint);font-family:'JetBrains Mono',monospace;}
+  .datetime{font-size:11px;color:var(--text-faint);font-family:'JetBrains Mono',monospace;margin-left:auto;white-space:nowrap;}
+
+  .tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;}
+  .tag{
+    font-size:10.5px;background:var(--surface-2);border:1px solid var(--border-soft);color:var(--text-dim);
+    padding:2px 8px;border-radius:5px;font-family:'JetBrains Mono',monospace;
+  }
+  .notes{font-size:12.5px;color:var(--text-dim);line-height:1.5;margin:0;}
+
+  .card-right{text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+  .outcome{
+    font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px;letter-spacing:0.03em;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .outcome.Win{background:var(--win-bg);color:var(--win);}
+  .outcome.Loss{background:var(--loss-bg);color:var(--loss);}
+  .outcome.BE{background:var(--be-bg);color:var(--be);}
+  .outcome.Open{background:var(--open-bg);color:var(--open);}
+  .pnl{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14.5px;}
+  .pnl.pos{color:var(--win);}
+  .pnl.neg{color:var(--loss);}
+  .pnl.zero{color:var(--text-faint);}
+  .del{
+    background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:11px;
+    padding:2px 4px;opacity:0.6;font-family:'Inter',sans-serif;
+  }
+  .del:hover{opacity:1;color:var(--loss);}
+
+  /* Modal / form */
+  .overlay{
+    display:none;position:fixed;inset:0;background:rgba(6,7,9,0.7);backdrop-filter:blur(3px);
+    z-index:50;align-items:flex-start;justify-content:center;overflow-y:auto;padding:40px 16px;
+  }
+  .overlay.show{display:flex;}
+  .modal{
+    background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    width:100%;max-width:520px;padding:22px;
+  }
+  .modal h2{margin:0 0 3px;font-size:17px;font-weight:800;}
+  .modal .modal-sub{font-size:12px;color:var(--text-faint);margin-bottom:18px;}
+  .field{margin-bottom:14px;}
+  .field label{
+    display:block;font-size:10.5px;letter-spacing:0.06em;text-transform:uppercase;
+    color:var(--text-faint);margin-bottom:6px;font-weight:600;
+  }
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+  input[type=text], input[type=number], input[type=date], input[type=time], select, textarea{
+    width:100%;background:var(--surface-2);border:1px solid var(--border);color:var(--text);
+    padding:9px 10px;border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;
+  }
+  input:focus, select:focus, textarea:focus{outline:none;border-color:var(--gold-dim);}
+  textarea{resize:vertical;min-height:56px;font-family:'Inter',sans-serif;}
+  .seg{display:flex;gap:6px;}
+  .seg button{
+    flex:1;background:var(--surface-2);border:1px solid var(--border);color:var(--text-dim);
+    padding:9px;border-radius:8px;font-size:12.5px;font-weight:600;cursor:pointer;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .seg button.sel{background:var(--gold);border-color:var(--gold);color:#12100A;}
+  .seg button.sel.dir-sell{background:var(--loss);border-color:var(--loss);color:#fff;}
+  .seg button.sel.dir-buy{background:var(--win);border-color:var(--win);color:#0c1a13;}
+
+  .tagpick{display:flex;flex-wrap:wrap;gap:6px;}
+  .tagchip{
+    background:var(--surface-2);border:1px solid var(--border);color:var(--text-dim);
+    padding:6px 11px;border-radius:100px;font-size:11.5px;cursor:pointer;font-family:'JetBrains Mono',monospace;
+  }
+  .tagchip.sel{background:rgba(201,169,97,0.15);border-color:var(--gold-dim);color:var(--gold);}
+  .addtag-row{display:flex;gap:6px;margin-top:8px;}
+  .addtag-row input{flex:1;}
+  .addtag-row button{
+    background:var(--surface-2);border:1px solid var(--border);color:var(--text-dim);
+    border-radius:8px;padding:0 12px;cursor:pointer;font-size:12px;font-weight:600;
+  }
+
+  .modal-actions{display:flex;gap:10px;margin-top:20px;}
+  .btn-cancel{
+    flex:1;background:none;border:1px solid var(--border);color:var(--text-dim);
+    padding:10px;border-radius:9px;cursor:pointer;font-weight:600;font-size:13px;font-family:'Inter',sans-serif;
+  }
+  .btn-save{
+    flex:2;background:var(--gold);border:none;color:#12100A;
+    padding:10px;border-radius:9px;cursor:pointer;font-weight:700;font-size:13px;font-family:'Inter',sans-serif;
+  }
+  .pair-custom{margin-top:6px;}
+  .hint{font-size:10.5px;color:var(--text-faint);margin-top:4px;}
+  ::-webkit-scrollbar{width:8px;}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="brand-eyebrow">Discipline · Patience · Timing</div>
+      <h1>Denz Trade</h1>
+      <div class="sub" id="subline">Loading entries…</div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="export-btn" onclick="exportCsv()">⭳ Export CSV</button>
+      <button class="new-btn" onclick="openModal()">+ New Entry</button>
+    </div>
+  </header>
+
+  <div class="viewtabs">
+    <button class="viewtab active" id="tabLog" onclick="setView('log')">Entries</button>
+    <button class="viewtab" id="tabDay" onclick="setView('day')">Day Performance</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Total Entries</div><div class="stat-value" id="statTotal">—</div></div>
+    <div class="stat"><div class="stat-label">Win Rate</div><div class="stat-value" id="statWinrate">—</div></div>
+    <div class="stat"><div class="stat-label">Net P&L</div><div class="stat-value" id="statPnl">—</div></div>
+    <div class="stat"><div class="stat-label">Open Trades</div><div class="stat-value" id="statOpen">—</div></div>
+  </div>
+
+  <div class="filters" id="pairFilters"></div>
+
+  <div class="cards" id="cardsWrap"></div>
+
+  <div class="daypage" id="dayPage">
+    <div id="dayRows"></div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h2 id="modalTitle">New Trade Setup</h2>
+    <div class="modal-sub">Log the entry, criteria, and result.</div>
+
+    <div class="field">
+      <label>Pair</label>
+      <div class="seg" id="pairSeg"></div>
+      <input type="text" id="customPair" class="pair-custom" placeholder="Custom pair (e.g. EURUSD)" style="display:none;">
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label>Direction</label>
+        <div class="seg">
+          <button type="button" data-dir="Buy" onclick="pick('dir','Buy',this)">Buy</button>
+          <button type="button" data-dir="Sell" onclick="pick('dir','Sell',this)">Sell</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Session</label>
+        <div class="seg">
+          <button type="button" data-sess="Asian" onclick="pick('sess','Asian',this)">Asian</button>
+          <button type="button" data-sess="London" onclick="pick('sess','London',this)">London</button>
+          <button type="button" data-sess="NY" onclick="pick('sess','NY',this)">NY</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label>Date</label>
+        <input type="date" id="fDate">
+      </div>
+      <div class="field">
+        <label>Time</label>
+        <input type="time" id="fTime">
+      </div>
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label>Outcome</label>
+        <select id="fOutcome">
+          <option value="Open">Open</option>
+          <option value="Win">Win</option>
+          <option value="Loss">Loss</option>
+          <option value="BE">Break Even</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>P&L <span style="text-transform:none;color:var(--text-faint);font-weight:400;">(enter amount, sign is automatic)</span></label>
+        <input type="number" id="fPnl" placeholder="0.00" step="0.01" min="0">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Entry Criteria</label>
+      <div class="tagpick" id="tagPick"></div>
+      <div class="addtag-row">
+        <input type="text" id="newTagInput" placeholder="Add custom tag…">
+        <button type="button" onclick="addCustomTag()">Add</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Notes</label>
+      <textarea id="fNotes" placeholder="Setup context, what confirmed the entry, management…"></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveEntry()">Save Entry</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const PRESET_TAGS = ["Order Block","BOS","CHoCH","FVG","Liquidity Sweep","DXY Confirmation"];
+const DEFAULT_PAIRS = ["XAUUSD","USDJPY","GBPUSD"];
+
+let entries = [];
+let customPairs = [];
+let customTags = [];
+let selectedTags = [];
+let activeFilter = "All";
+let form = { pair:"XAUUSD", dir:null, sess:null };
+
+/* ---------- Portable storage layer ----------
+   Works three ways, in priority order:
+   1. window.storage  — used automatically when this file is opened inside Claude
+   2. IndexedDB        — used on a real device/browser (installed APK, GitHub Pages, etc.)
+   3. localStorage      — fallback if IndexedDB is unavailable for any reason
+   Nothing above this needs to change; loadData()/persist*() below just work either way. */
+const DB_NAME = 'denzTradeDB';
+const STORE_NAME = 'kv';
+let _idb = null;
+
+function hasClaudeStorage(){ return typeof window.storage !== 'undefined' && window.storage; }
+
+function openIdb(){
+  return new Promise((resolve, reject)=>{
+    if(_idb){ resolve(_idb); return; }
+    if(!('indexedDB' in window)){ reject('no indexeddb'); return; }
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = ()=>{ req.result.createObjectStore(STORE_NAME); };
+    req.onsuccess = ()=>{ _idb = req.result; resolve(_idb); };
+    req.onerror = ()=> reject(req.error);
+  });
+}
+
+async function storageGet(key){
+  if(hasClaudeStorage()){
+    try{ const r = await window.storage.get(key); return r ? r.value : null; }
+    catch(e){ return null; }
+  }
+  try{
+    const db = await openIdb();
+    return await new Promise((resolve)=>{
+      const tx = db.transaction(STORE_NAME, 'readonly');
+      const req = tx.objectStore(STORE_NAME).get(key);
+      req.onsuccess = ()=> resolve(req.result ?? null);
+      req.onerror = ()=> resolve(null);
+    });
+  }catch(e){
+    return localStorage.getItem(key);
+  }
+}
+
+async function storageSet(key, value){
+  if(hasClaudeStorage()){
+    try{ await window.storage.set(key, value); return; }
+    catch(e){ /* fall through to local storage below */ }
+  }
+  try{
+    const db = await openIdb();
+    await new Promise((resolve)=>{
+      const tx = db.transaction(STORE_NAME, 'readwrite');
+      tx.objectStore(STORE_NAME).put(value, key);
+      tx.oncomplete = ()=> resolve();
+      tx.onerror = ()=> resolve();
+    });
+  }catch(e){
+    try{ localStorage.setItem(key, value); }catch(e2){ console.error('save failed', e2); }
+  }
+}
+
+async function loadData(){
+  try{
+    const v = await storageGet('journal:entries');
+    entries = v ? JSON.parse(v) : [];
+  }catch(err){ entries = []; }
+  try{
+    const v = await storageGet('journal:customPairs');
+    customPairs = v ? JSON.parse(v) : [];
+  }catch(err){ customPairs = []; }
+  try{
+    const v = await storageGet('journal:customTags');
+    customTags = v ? JSON.parse(v) : [];
+  }catch(err){ customTags = []; }
+
+  // One-time migration: fix any entries saved before sign-by-outcome was enforced
+  let fixed = false;
+  entries.forEach(e=>{
+    const correctSign = applyOutcomeSign(Math.abs(e.pnl), e.outcome);
+    if(correctSign !== e.pnl){ e.pnl = correctSign; fixed = true; }
+  });
+  if(fixed) await persistEntries();
+
+  render();
+}
+
+async function persistEntries(){
+  await storageSet('journal:entries', JSON.stringify(entries));
+}
+async function persistCustomPairs(){
+  await storageSet('journal:customPairs', JSON.stringify(customPairs));
+}
+async function persistCustomTags(){
+  await storageSet('journal:customTags', JSON.stringify(customTags));
+}
+
+function allPairs(){
+  const fromEntries = [...new Set(entries.map(e=>e.pair))];
+  return [...new Set([...DEFAULT_PAIRS, ...customPairs, ...fromEntries])];
+}
+
+function renderFilters(){
+  const wrap = document.getElementById('pairFilters');
+  const pairs = ["All", ...allPairs()];
+  wrap.innerHTML = pairs.map(p=>`<button class="pill ${activeFilter===p?'active':''}" onclick="setFilter('${p.replace(/'/g,"\\'")}')">${p}</button>`).join('');
+}
+function setFilter(p){ activeFilter = p; render(); }
+
+function renderPairSeg(){
+  const seg = document.getElementById('pairSeg');
+  const pairs = [...DEFAULT_PAIRS, ...customPairs];
+  seg.innerHTML = pairs.map(p=>`<button type="button" data-p="${p}" onclick="pickPair('${p}', this)">${p}</button>`).join('') +
+    `<button type="button" data-p="__custom__" onclick="pickPair('__custom__', this)">Custom</button>`;
+}
+function pickPair(p, el){
+  form.pair = p;
+  document.querySelectorAll('#pairSeg button').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  const custom = document.getElementById('customPair');
+  if(p === '__custom__'){ custom.style.display='block'; custom.focus(); }
+  else{ custom.style.display='none'; }
+}
+
+function renderTagPick(){
+  const wrap = document.getElementById('tagPick');
+  const all = [...PRESET_TAGS, ...customTags];
+  wrap.innerHTML = all.map(t=>`<div class="tagchip ${selectedTags.includes(t)?'sel':''}" onclick="toggleTag('${t.replace(/'/g,"\\'")}')">${t}</div>`).join('');
+}
+function toggleTag(t){
+  if(selectedTags.includes(t)) selectedTags = selectedTags.filter(x=>x!==t);
+  else selectedTags.push(t);
+  renderTagPick();
+}
+async function addCustomTag(){
+  const input = document.getElementById('newTagInput');
+  const val = input.value.trim();
+  if(!val) return;
+  if(![...PRESET_TAGS, ...customTags].includes(val)){
+    customTags.push(val);
+    await persistCustomTags();
+  }
+  selectedTags.push(val);
+  input.value = '';
+  renderTagPick();
+}
+
+function pick(kind, val, el){
+  form[kind] = val;
+  el.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('sel','dir-buy','dir-sell'));
+  el.classList.add('sel');
+  if(kind==='dir') el.classList.add(val==='Buy' ? 'dir-buy':'dir-sell');
+}
+
+function openModal(){
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('modalTitle').textContent = 'New Trade Setup';
+  form = { pair:"XAUUSD", dir:null, sess:null };
+  selectedTags = [];
+  document.getElementById('fDate').value = new Date().toISOString().slice(0,10);
+  document.getElementById('fTime').value = new Date().toTimeString().slice(0,5);
+  document.getElementById('fOutcome').value = 'Open';
+  document.getElementById('fPnl').value = '';
+  document.getElementById('fNotes').value = '';
+  document.getElementById('customPair').value = '';
+  document.getElementById('customPair').style.display = 'none';
+  renderPairSeg();
+  const firstPairBtn = document.querySelector('#pairSeg button[data-p="XAUUSD"]');
+  if(firstPairBtn) firstPairBtn.classList.add('sel');
+  document.querySelectorAll('[data-dir], [data-sess]').forEach(b=>b.classList.remove('sel','dir-buy','dir-sell'));
+  renderTagPick();
+}
+function closeModal(){ document.getElementById('overlay').classList.remove('show'); }
+
+async function saveEntry(){
+  let pair = form.pair;
+  if(pair === '__custom__'){
+    pair = document.getElementById('customPair').value.trim();
+    if(!pair){ alert('Enter a custom pair name'); return; }
+    if(![...DEFAULT_PAIRS, ...customPairs].includes(pair)){
+      customPairs.push(pair);
+      await persistCustomPairs();
+    }
+  }
+  if(!pair){ alert('Select a pair'); return; }
+  if(!form.dir){ alert('Select direction'); return; }
+  if(!form.sess){ alert('Select session'); return; }
+
+  const outcome = document.getElementById('fOutcome').value;
+  const rawPnl = Math.abs(parseFloat(document.getElementById('fPnl').value) || 0);
+  const pnl = applyOutcomeSign(rawPnl, outcome);
+
+  const entry = {
+    id: 'e' + Date.now(),
+    pair, dir: form.dir, sess: form.sess,
+    date: document.getElementById('fDate').value,
+    time: document.getElementById('fTime').value,
+    outcome,
+    pnl,
+    notes: document.getElementById('fNotes').value.trim(),
+    tags: [...selectedTags]
+  };
+  entries.unshift(entry);
+  await persistEntries();
+  closeModal();
+  render();
+}
+
+async function deleteEntry(id){
+  entries = entries.filter(e=>e.id!==id);
+  await persistEntries();
+  render();
+}
+
+function applyOutcomeSign(amount, outcome){
+  // Amount entered is always treated as a magnitude; the outcome decides the sign.
+  if(outcome === 'Loss') return -Math.abs(amount);
+  if(outcome === 'Win') return Math.abs(amount);
+  if(outcome === 'BE') return 0;
+  return amount; // Open: leave as entered (usually 0 until closed)
+}
+
+function fmtPnl(v){
+  const sign = v > 0 ? '+' : '';
+  return sign + v.toFixed(2);
+}
+
+function renderCards(){
+  const wrap = document.getElementById('cardsWrap');
+  let list = entries;
+  if(activeFilter !== 'All') list = list.filter(e=>e.pair===activeFilter);
+  list = [...list].sort((a,b)=> (b.date+b.time).localeCompare(a.date+a.time));
+
+  if(list.length === 0){
+    wrap.innerHTML = `<div class="empty"><b>No entries yet</b>Log your first trade setup to start tracking.</div>`;
+    return;
+  }
+
+  wrap.innerHTML = list.map(e=>{
+    const pnlClass = e.pnl > 0 ? 'pos' : (e.pnl < 0 ? 'neg' : 'zero');
+    const dateStr = e.date ? new Date(e.date+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short'}) : '';
+    return `
+    <div class="card sess-${e.sess}">
+      <div class="card-main">
+        <div class="card-top">
+          <span class="pair">${e.pair}</span>
+          <span class="dir ${e.dir}">${e.dir.toUpperCase()}</span>
+          <span class="session-tag">${e.sess}</span>
+          <span class="datetime">${dateStr}${e.time ? ' · '+e.time : ''}</span>
+        </div>
+        ${e.tags.length ? `<div class="tags">${e.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>` : ''}
+        ${e.notes ? `<p class="notes">${escapeHtml(e.notes)}</p>` : ''}
+      </div>
+      <div class="card-right">
+        <span class="outcome ${e.outcome}">${e.outcome === 'BE' ? 'BREAK EVEN' : e.outcome.toUpperCase()}</span>
+        <span class="pnl ${pnlClass}">${fmtPnl(e.pnl)}</span>
+        <button class="del" onclick="deleteEntry('${e.id}')">Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function renderStats(){
+  const list = activeFilter==='All' ? entries : entries.filter(e=>e.pair===activeFilter);
+  const total = list.length;
+  const wins = list.filter(e=>e.outcome==='Win').length;
+  const losses = list.filter(e=>e.outcome==='Loss').length;
+  const decided = wins + losses;
+  const winrate = decided > 0 ? Math.round((wins/decided)*100) : 0;
+  const netPnl = list.reduce((s,e)=>s+e.pnl,0);
+  const openCount = list.filter(e=>e.outcome==='Open').length;
+
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statWinrate').textContent = decided > 0 ? winrate + '%' : '—';
+  const pnlEl = document.getElementById('statPnl');
+  pnlEl.textContent = fmtPnl(netPnl);
+  pnlEl.className = 'stat-value ' + (netPnl > 0 ? 'win' : (netPnl < 0 ? 'loss' : ''));
+  document.getElementById('statOpen').textContent = openCount;
+  document.getElementById('subline').textContent = total === 0
+    ? 'No trades logged yet'
+    : `${total} entr${total===1?'y':'ies'} logged · ${allPairs().length} pair${allPairs().length===1?'':'s'} tracked`;
+}
+
+let currentView = 'log';
+function setView(v){
+  currentView = v;
+  document.getElementById('tabLog').classList.toggle('active', v==='log');
+  document.getElementById('tabDay').classList.toggle('active', v==='day');
+  document.getElementById('cardsWrap').style.display = v==='log' ? 'flex' : 'none';
+  document.getElementById('dayPage').classList.toggle('show', v==='day');
+  render();
+}
+
+const DAY_ORDER = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+function dayNameFromDate(dateStr){
+  if(!dateStr) return null;
+  const d = new Date(dateStr + 'T00:00:00');
+  if(isNaN(d)) return null;
+  return DAY_ORDER[(d.getDay() + 6) % 7]; // getDay: 0=Sun -> map to Mon-first order
+}
+
+function renderDayStats(){
+  const wrap = document.getElementById('dayRows');
+  const list = activeFilter==='All' ? entries : entries.filter(e=>e.pair===activeFilter);
+
+  const byDay = {};
+  DAY_ORDER.forEach(d=>byDay[d] = { total:0, wins:0, losses:0, be:0, open:0, pnl:0 });
+
+  list.forEach(e=>{
+    const d = dayNameFromDate(e.date);
+    if(!d) return;
+    byDay[d].total++;
+    byDay[d].pnl += e.pnl;
+    if(e.outcome==='Win') byDay[d].wins++;
+    else if(e.outcome==='Loss') byDay[d].losses++;
+    else if(e.outcome==='BE') byDay[d].be++;
+    else byDay[d].open++;
+  });
+
+  const maxWinrate = Math.max(...DAY_ORDER.map(d=>{
+    const s = byDay[d];
+    const decided = s.wins + s.losses;
+    return decided > 0 ? (s.wins/decided)*100 : 0;
+  }), 1);
+
+  if(list.length === 0){
+    wrap.innerHTML = `<div class="empty"><b>No entries yet</b>Log some trades to see win rate by weekday.</div>`;
+    return;
+  }
+
+  wrap.innerHTML = DAY_ORDER.map(d=>{
+    const s = byDay[d];
+    const decided = s.wins + s.losses;
+    const winrate = decided > 0 ? Math.round((s.wins/decided)*100) : null;
+    const barWidth = winrate !== null ? (winrate) : 0;
+    const pnlClass = s.pnl > 0 ? 'win' : (s.pnl < 0 ? 'loss' : '');
+    return `
+    <div class="dayrow">
+      <div class="dayname">${d}</div>
+      <div class="daybar-wrap">
+        <div class="daybar-fill ${winrate===null?'nodata':''}" style="width:${winrate===null? 4 : Math.max(barWidth,4)}%;"></div>
+      </div>
+      <div class="daystats">
+        ${winrate===null
+          ? `<span class="day-empty-note">${s.total} entr${s.total===1?'y':'ies'}, no closed trades</span>`
+          : `
+          <div class="daystat-item"><div class="v">${s.total}</div><div class="l">Trades</div></div>
+          <div class="daystat-item"><div class="v" style="color:var(--gold);">${winrate}%</div><div class="l">Win Rate</div></div>
+          <div class="daystat-item"><div class="v ${pnlClass}" style="color:${s.pnl>0?'var(--win)':(s.pnl<0?'var(--loss)':'var(--text-faint)')};">${fmtPnl(s.pnl)}</div><div class="l">Net P&L</div></div>
+          `
+        }
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function csvEscape(v){
+  const s = String(v ?? '');
+  if(/[",\n]/.test(s)) return '"' + s.replace(/"/g,'""') + '"';
+  return s;
+}
+
+function exportCsv(){
+  const list = activeFilter==='All' ? entries : entries.filter(e=>e.pair===activeFilter);
+  if(list.length === 0){ alert('No entries to export.'); return; }
+  const sorted = [...list].sort((a,b)=> (a.date+a.time).localeCompare(b.date+b.time));
+  const headers = ['Date','Day','Time','Pair','Direction','Session','Outcome','PnL','Tags','Notes'];
+  const rows = sorted.map(e=>[
+    e.date, dayNameFromDate(e.date) || '', e.time, e.pair, e.dir, e.sess, e.outcome==='BE'?'Break Even':e.outcome,
+    e.pnl.toFixed(2), e.tags.join('; '), e.notes
+  ].map(csvEscape).join(','));
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const stamp = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = `trade-log_${activeFilter==='All'?'all':activeFilter}_${stamp}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function render(){
+  renderFilters();
+  renderStats();
+  if(currentView === 'log') renderCards();
+  else renderDayStats();
+}
+
+document.getElementById('overlay').addEventListener('click', (e)=>{
+  if(e.target.id === 'overlay') closeModal();
+});
+
+loadData();
+</script>
+</body>
+</html>
