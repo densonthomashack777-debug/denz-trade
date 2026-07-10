@@ -343,6 +343,17 @@
   </div>
 </div>
 
+<div class="overlay" id="confirmOverlay">
+  <div class="modal" style="max-width:340px;">
+    <h2 style="color:var(--loss);">Delete this entry?</h2>
+    <div class="modal-sub" id="confirmDetail" style="margin-bottom:16px;"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeConfirm()">Cancel</button>
+      <button class="btn-save" style="background:var(--loss);color:#fff;" onclick="doDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const PRESET_TAGS = ["Order Block","BOS","CHoCH","FVG","Liquidity Sweep","DXY Confirmation"];
 const DEFAULT_PAIRS = ["XAUUSD","USDJPY","GBPUSD"];
@@ -565,6 +576,26 @@ async function deleteEntry(id){
   render();
 }
 
+let _pendingDeleteId = null;
+function confirmDeleteEntry(id){
+  const entry = entries.find(e=>e.id===id);
+  if(!entry) return;
+  _pendingDeleteId = id;
+  document.getElementById('confirmDetail').textContent =
+    `${entry.pair} ${entry.dir} · ${entry.date || ''}${entry.time ? ' '+entry.time : ''} — this can't be undone.`;
+  document.getElementById('confirmOverlay').classList.add('show');
+}
+function closeConfirm(){
+  _pendingDeleteId = null;
+  document.getElementById('confirmOverlay').classList.remove('show');
+}
+function doDelete(){
+  if(_pendingDeleteId){
+    deleteEntry(_pendingDeleteId);
+  }
+  closeConfirm();
+}
+
 function applyOutcomeSign(amount, outcome){
   // Amount entered is always treated as a magnitude; the outcome decides the sign.
   if(outcome === 'Loss') return -Math.abs(amount);
@@ -607,7 +638,7 @@ function renderCards(){
       <div class="card-right">
         <span class="outcome ${e.outcome}">${e.outcome === 'BE' ? 'BREAK EVEN' : e.outcome.toUpperCase()}</span>
         <span class="pnl ${pnlClass}">${fmtPnl(e.pnl)}</span>
-        <button class="del" onclick="deleteEntry('${e.id}')">Delete</button>
+        <button class="del" onclick="confirmDeleteEntry('${e.id}')">Delete</button>
       </div>
     </div>`;
   }).join('');
@@ -750,6 +781,9 @@ function render(){
 
 document.getElementById('overlay').addEventListener('click', (e)=>{
   if(e.target.id === 'overlay') closeModal();
+});
+document.getElementById('confirmOverlay').addEventListener('click', (e)=>{
+  if(e.target.id === 'confirmOverlay') closeConfirm();
 });
 
 loadData();
