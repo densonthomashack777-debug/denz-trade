@@ -4,30 +4,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Denz Trade</title>
-<meta name="theme-color" content="#0A0C10">
+<meta name="theme-color" content="#000000">
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0A0C10;
-    --surface:#13161D;
-    --surface-2:#191D26;
-    --border:#252A34;
-    --border-soft:#1D212A;
-    --gold:#C9A961;
-    --gold-dim:#8A7743;
-    --text:#E9E7E2;
-    --text-dim:#8B909C;
-    --text-faint:#565C68;
-    --win:#4ADE9C;
-    --win-bg:rgba(74,222,156,0.09);
-    --loss:#F0656B;
-    --loss-bg:rgba(240,101,107,0.09);
-    --be:#E8B84B;
-    --be-bg:rgba(232,184,75,0.09);
+    --bg:#000000;
+    --surface:#0A0A0A;
+    --surface-2:#111111;
+    --border:#1C1C1C;
+    --border-soft:#161616;
+    --gold:#8CFF4D;
+    --gold-dim:#4E8C2C;
+    --text:#F5F5F5;
+    --text-dim:#8A8A8A;
+    --text-faint:#4E4E4E;
+    --win:#8CFF4D;
+    --win-bg:rgba(140,255,77,0.10);
+    --loss:#FF5C5C;
+    --loss-bg:rgba(255,92,92,0.10);
+    --be:#E8C34B;
+    --be-bg:rgba(232,195,75,0.10);
     --open:#5B9EE8;
-    --open-bg:rgba(91,158,232,0.09);
+    --open-bg:rgba(91,158,232,0.10);
     --asian:#7C9CE8;
     --london:#B48EE8;
     --ny:#E89C5B;
@@ -36,43 +36,62 @@
   body{
     margin:0;
     background:
-      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(201,169,97,0.06), transparent),
+      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(140,255,77,0.05), transparent),
       var(--bg);
     color:var(--text);
     font-family:'Inter',sans-serif;
     -webkit-font-smoothing:antialiased;
-    padding:28px 20px 80px;
+    padding:22px 20px 96px;
     min-height:100vh;
   }
   .mono{font-family:'JetBrains Mono',monospace;}
   .wrap{max-width:920px;margin:0 auto;}
 
   /* Header */
-  header{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:22px;}
-  .brand-eyebrow{font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:4px;}
-  h1{margin:0;font-size:26px;font-weight:800;letter-spacing:-0.02em;}
-  .sub{color:var(--text-dim);font-size:13px;margin-top:4px;}
-  .new-btn{
-    background:var(--gold);color:#12100A;border:none;padding:11px 18px;border-radius:9px;
-    font-weight:700;font-size:13.5px;cursor:pointer;font-family:'Inter',sans-serif;
-    display:flex;align-items:center;gap:7px;transition:transform .12s ease, box-shadow .12s ease;
-    box-shadow:0 0 0 rgba(201,169,97,0);
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;}
+  .topbar-left{display:flex;align-items:center;gap:12px;}
+  .hamburger, .icon-btn{
+    background:none;border:none;color:var(--text-dim);cursor:pointer;padding:6px;
+    display:flex;align-items:center;justify-content:center;
   }
-  .new-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(201,169,97,0.25);}
-  .new-btn:active{transform:translateY(0);}
+  .icon-btn{border:1px solid var(--border);border-radius:8px;width:36px;height:36px;}
+  .hamburger svg, .icon-btn svg{width:19px;height:19px;}
+  .logo-mark{width:30px;height:30px;flex-shrink:0;color:var(--gold);animation:radarSpin 7s linear infinite;transform-origin:50% 50%;filter:drop-shadow(0 0 4px rgba(140,255,77,0.45));}
+  .logo-mark svg{width:100%;height:100%;}
+  @keyframes radarSpin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+  .brand-block{display:flex;flex-direction:column;}
+  h1{
+    margin:0;font-size:19px;font-weight:800;letter-spacing:0.03em;text-transform:uppercase;line-height:1.1;
+    background:linear-gradient(100deg, var(--text) 30%, var(--gold) 50%, var(--text) 70%);
+    background-size:250% auto;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+    animation:titleShine 5s linear infinite;
+  }
+  @keyframes titleShine{0%{background-position:200% center;}100%{background-position:-200% center;}}
+  .brand-eyebrow{font-size:9.5px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-top:3px;font-family:'JetBrains Mono',monospace;}
+  .sub{color:var(--text-faint);font-size:10.5px;margin-top:3px;font-family:'JetBrains Mono',monospace;letter-spacing:0.02em;}
+  .topbar-right{display:flex;align-items:center;gap:8px;}
+
+  .actions-row{display:flex;gap:10px;margin-bottom:22px;}
+  .new-btn{
+    flex:1;background:none;color:var(--gold);border:1px solid var(--gold-dim);padding:12px 18px;border-radius:9px;
+    font-weight:700;font-size:12.5px;cursor:pointer;font-family:'JetBrains Mono',monospace;letter-spacing:0.08em;text-transform:uppercase;
+    display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s ease;
+  }
+  .new-btn:hover{background:rgba(140,255,77,0.08);box-shadow:0 0 20px rgba(140,255,77,0.15);}
+  .new-btn:active{transform:translateY(1px);}
   .export-btn{
-    background:var(--surface);color:var(--text-dim);border:1px solid var(--border);padding:11px 16px;border-radius:9px;
-    font-weight:600;font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;
-    display:flex;align-items:center;gap:7px;transition:all .15s ease;
+    flex:1;background:none;color:var(--text-dim);border:1px solid var(--border);padding:12px 16px;border-radius:9px;
+    font-weight:700;font-size:12.5px;cursor:pointer;font-family:'JetBrains Mono',monospace;letter-spacing:0.08em;text-transform:uppercase;
+    display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s ease;
   }
   .export-btn:hover{border-color:var(--gold-dim);color:var(--text);}
 
-  .viewtabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:4px;margin-bottom:18px;width:fit-content;}
+  .viewtabs{display:flex;gap:28px;border-bottom:1px solid var(--border);margin-bottom:20px;}
   .viewtab{
-    background:none;border:none;color:var(--text-dim);padding:8px 16px;border-radius:7px;
-    font-size:12.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;
+    background:none;border:none;border-bottom:2px solid transparent;color:var(--text-faint);padding:10px 2px 12px;
+    font-size:11.5px;font-weight:700;cursor:pointer;font-family:'JetBrains Mono',monospace;letter-spacing:0.1em;text-transform:uppercase;
   }
-  .viewtab.active{background:var(--surface-2);color:var(--gold);}
+  .viewtab.active{color:var(--gold);border-bottom-color:var(--gold);}
 
   .daypage{display:none;}
   .daypage.show{display:block;}
@@ -92,29 +111,50 @@
 
   /* Stats bar */
   .stats{
-    display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
-    background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;
-    margin-bottom:18px;
+    display:grid;grid-template-columns:1fr 1fr;
+    border:1px dashed var(--gold-dim);border-radius:14px;
+    margin-bottom:22px;overflow:hidden;
   }
-  .stat{background:var(--surface);padding:14px 16px;}
-  .stat-label{font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint);margin-bottom:6px;}
-  .stat-value{font-size:20px;font-weight:700;font-family:'JetBrains Mono',monospace;}
+  .stat{padding:16px 18px;position:relative;border-right:1px solid var(--border);border-bottom:1px solid var(--border);}
+  .stat:nth-child(2n){border-right:none;}
+  .stat:nth-last-child(-n+2){border-bottom:none;}
+  .stat-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px;font-family:'JetBrains Mono',monospace;}
+  .stat-value{font-size:24px;font-weight:800;font-family:'Inter',sans-serif;letter-spacing:-0.01em;}
   .stat-value.win{color:var(--win);}
   .stat-value.loss{color:var(--loss);}
-  @media (max-width:640px){.stats{grid-template-columns:repeat(2,1fr);}}
+  .stat-icon{
+    position:absolute;top:14px;right:14px;width:26px;height:26px;border-radius:7px;
+    background:rgba(140,255,77,0.08);color:var(--gold);display:flex;align-items:center;justify-content:center;
+  }
+  .stat-icon svg{width:14px;height:14px;}
+  .stat-icon.pulse-win{animation:pulseGlowWin 2.2s ease-in-out infinite;}
+  .stat-icon.pulse-loss{animation:pulseGlowLoss 2.2s ease-in-out infinite;}
+  @keyframes pulseGlowWin{
+    0%,100%{box-shadow:0 0 0 0 rgba(140,255,77,0.45);}
+    50%{box-shadow:0 0 0 7px rgba(140,255,77,0);}
+  }
+  @keyframes pulseGlowLoss{
+    0%,100%{box-shadow:0 0 0 0 rgba(255,92,92,0.45);}
+    50%{box-shadow:0 0 0 7px rgba(255,92,92,0);}
+  }
+  .stat-value{transition:color .25s ease;}
+  @media (prefers-reduced-motion: reduce){
+    .logo-mark, h1, .stat-icon.pulse-win, .stat-icon.pulse-loss{animation:none !important;}
+  }
+  @media (max-width:640px){.stat-value{font-size:20px;}}
 
   /* Filters */
   .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;}
   .pill{
-    background:var(--surface);border:1px solid var(--border);color:var(--text-dim);
-    padding:7px 13px;border-radius:100px;font-size:12.5px;font-weight:600;cursor:pointer;
-    transition:all .15s ease;font-family:'JetBrains Mono',monospace;
+    background:none;border:1px solid var(--border);color:var(--text-dim);
+    padding:8px 14px;border-radius:8px;font-size:11.5px;font-weight:700;cursor:pointer;
+    transition:all .15s ease;font-family:'JetBrains Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;
   }
   .pill:hover{border-color:var(--gold-dim);color:var(--text);}
-  .pill.active{background:var(--gold);border-color:var(--gold);color:#12100A;}
+  .pill.active{background:rgba(140,255,77,0.08);border-color:var(--gold);color:var(--gold);}
 
   /* Cards grid */
-  .cards{display:flex;flex-direction:column;gap:10px;}
+  .cards{display:flex;flex-direction:column;gap:14px;}
   .empty{
     text-align:center;padding:60px 20px;color:var(--text-faint);border:1px dashed var(--border);
     border-radius:12px;font-size:13.5px;
@@ -122,8 +162,8 @@
   .empty b{color:var(--text-dim);display:block;margin-bottom:6px;font-size:15px;}
 
   .card{
-    background:var(--surface);border:1px solid var(--border);border-radius:11px;
-    padding:14px 16px 14px 14px;display:flex;gap:14px;align-items:flex-start;
+    background:var(--surface);border:1px solid var(--border-soft);border-radius:4px;
+    padding:16px 16px 16px 18px;display:flex;gap:14px;align-items:flex-start;
     border-left:3px solid var(--asian);position:relative;
   }
   .card.sess-London{border-left-color:var(--london);}
@@ -131,42 +171,68 @@
   .card.sess-Asian{border-left-color:var(--asian);}
 
   .card-main{flex:1;min-width:0;}
-  .card-top{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:7px;}
-  .pair{font-weight:700;font-size:15px;letter-spacing:-0.01em;}
+  .card-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
+  .pair{font-weight:800;font-size:16px;letter-spacing:-0.01em;}
   .dir{
-    font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:5px;letter-spacing:0.03em;
-    font-family:'JetBrains Mono',monospace;
+    font-size:10px;font-weight:700;padding:3px 9px;border-radius:5px;letter-spacing:0.05em;
+    font-family:'JetBrains Mono',monospace;text-transform:uppercase;
   }
   .dir.Buy{background:var(--win-bg);color:var(--win);}
   .dir.Sell{background:var(--loss-bg);color:var(--loss);}
-  .session-tag{font-size:11px;color:var(--text-faint);font-family:'JetBrains Mono',monospace;}
+  .session-tag{font-size:11px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;letter-spacing:0.04em;text-transform:uppercase;}
   .datetime{font-size:11px;color:var(--text-faint);font-family:'JetBrains Mono',monospace;margin-left:auto;white-space:nowrap;}
 
-  .tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
   .tag{
-    font-size:10.5px;background:var(--surface-2);border:1px solid var(--border-soft);color:var(--text-dim);
-    padding:2px 8px;border-radius:5px;font-family:'JetBrains Mono',monospace;
+    font-size:10px;background:none;border:1px solid var(--border);color:var(--text-dim);
+    padding:3px 9px;border-radius:5px;font-family:'JetBrains Mono',monospace;letter-spacing:0.04em;text-transform:uppercase;
   }
   .notes{font-size:12.5px;color:var(--text-dim);line-height:1.5;margin:0;}
 
-  .card-right{text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+  .card-right{text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
   .outcome{
-    font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px;letter-spacing:0.03em;
-    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;font-weight:700;padding:4px 10px;border-radius:5px;letter-spacing:0.05em;
+    font-family:'JetBrains Mono',monospace;text-transform:uppercase;
   }
   .outcome.Win{background:var(--win-bg);color:var(--win);}
   .outcome.Loss{background:var(--loss-bg);color:var(--loss);}
   .outcome.BE{background:var(--be-bg);color:var(--be);}
   .outcome.Open{background:var(--open-bg);color:var(--open);}
-  .pnl{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14.5px;}
+  .pnl{font-family:'JetBrains Mono',monospace;font-weight:800;font-size:16px;}
   .pnl.pos{color:var(--win);}
   .pnl.neg{color:var(--loss);}
   .pnl.zero{color:var(--text-faint);}
   .del{
     background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:11px;
-    padding:2px 4px;opacity:0.6;font-family:'Inter',sans-serif;
+    padding:2px 4px;opacity:0.75;font-family:'JetBrains Mono',monospace;letter-spacing:0.04em;text-transform:uppercase;
+    display:flex;align-items:center;gap:4px;
   }
+  .del svg{width:12px;height:12px;}
   .del:hover{opacity:1;color:var(--loss);}
+  .card-actions{display:flex;align-items:center;gap:10px;}
+  .edit-btn{
+    background:none;border:1px solid var(--border);color:var(--text-dim);cursor:pointer;
+    width:22px;height:22px;min-width:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    padding:0;transition:all .18s ease;
+  }
+  .edit-btn:hover{border-color:var(--gold-dim);color:var(--gold);transform:rotate(60deg);}
+  .edit-btn svg{width:12px;height:12px;}
+
+  /* Bottom nav */
+  .bottomnav{
+    position:fixed;left:0;right:0;bottom:0;z-index:40;
+    background:rgba(0,0,0,0.92);backdrop-filter:blur(6px);border-top:1px solid var(--border);
+    display:flex;justify-content:center;
+    padding-bottom:env(safe-area-inset-bottom, 0);
+  }
+  .bottomnav-inner{display:flex;width:100%;max-width:920px;}
+  .navitem{
+    flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 4px 10px;
+    background:none;border:none;color:var(--text-faint);cursor:pointer;font-family:'JetBrains Mono',monospace;
+  }
+  .navitem svg{width:19px;height:19px;}
+  .navitem .navlabel{font-size:9px;letter-spacing:0.08em;text-transform:uppercase;font-weight:700;}
+  .navitem.active{color:var(--gold);}
 
   /* Modal / form */
   .overlay{
@@ -208,7 +274,7 @@
     background:var(--surface-2);border:1px solid var(--border);color:var(--text-dim);
     padding:6px 11px;border-radius:100px;font-size:11.5px;cursor:pointer;font-family:'JetBrains Mono',monospace;
   }
-  .tagchip.sel{background:rgba(201,169,97,0.15);border-color:var(--gold-dim);color:var(--gold);}
+  .tagchip.sel{background:rgba(140,255,77,0.12);border-color:var(--gold-dim);color:var(--gold);}
   .addtag-row{display:flex;gap:6px;margin-top:8px;}
   .addtag-row input{flex:1;}
   .addtag-row button{
@@ -233,17 +299,37 @@
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <div>
-      <div class="brand-eyebrow">Discipline · Patience · Timing</div>
-      <h1>Denz Trade</h1>
-      <div class="sub" id="subline">Loading entries…</div>
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="hamburger" title="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4.5"></circle><circle cx="12" cy="12" r="0.8" fill="currentColor" stroke="none"></circle><line x1="12" y1="1.5" x2="12" y2="5.5" stroke-width="2.4" stroke-linecap="round"></line></svg>
+      </div>
+      <div class="brand-block">
+        <h1>Denz Trade</h1>
+        <div class="brand-eyebrow">Discipline · Patience · Timing</div>
+        <div class="sub" id="subline">Loading entries…</div>
+      </div>
     </div>
-    <div style="display:flex;gap:8px;">
-      <button class="export-btn" onclick="exportCsv()">⭳ Export CSV</button>
-      <button class="new-btn" onclick="openModal()">+ New Entry</button>
+    <div class="topbar-right">
+      <button class="icon-btn" title="Performance">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+      </button>
+      <button class="icon-btn" title="More">
+        <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="5" r="1.6"></circle><circle cx="12" cy="12" r="1.6"></circle><circle cx="12" cy="19" r="1.6"></circle></svg>
+      </button>
     </div>
-  </header>
+  </div>
+
+  <div class="actions-row">
+    <button class="export-btn" onclick="exportCsv()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+      Export CSV
+    </button>
+    <button class="new-btn" onclick="openModal()">+ New Entry</button>
+  </div>
 
   <div class="viewtabs">
     <button class="viewtab active" id="tabLog" onclick="setView('log')">Entries</button>
@@ -251,10 +337,26 @@
   </div>
 
   <div class="stats">
-    <div class="stat"><div class="stat-label">Total Entries</div><div class="stat-value" id="statTotal">—</div></div>
-    <div class="stat"><div class="stat-label">Win Rate</div><div class="stat-value" id="statWinrate">—</div></div>
-    <div class="stat"><div class="stat-label">Net P&L</div><div class="stat-value" id="statPnl">—</div></div>
-    <div class="stat"><div class="stat-label">Open Trades</div><div class="stat-value" id="statOpen">—</div></div>
+    <div class="stat">
+      <div class="stat-label">Total Entries</div>
+      <div class="stat-value" id="statTotal">—</div>
+      <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><circle cx="12" cy="12" r="0.5" fill="currentColor"></circle></svg></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Win Rate</div>
+      <div class="stat-value" id="statWinrate">—</div>
+      <div class="stat-icon pulse-win"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"></path><path d="M7 5H4a2 2 0 0 0 2 4"></path><path d="M17 5h3a2 2 0 0 1-2 4"></path></svg></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Net P&L</div>
+      <div class="stat-value" id="statPnl">—</div>
+      <div class="stat-icon" id="pnlIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Break Even</div>
+      <div class="stat-value" id="statBE">—</div>
+      <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="9" x2="19" y2="9"></line><line x1="5" y1="15" x2="19" y2="15"></line></svg></div>
+    </div>
   </div>
 
   <div class="filters" id="pairFilters"></div>
@@ -263,6 +365,27 @@
 
   <div class="daypage" id="dayPage">
     <div id="dayRows"></div>
+  </div>
+</div>
+
+<div class="bottomnav">
+  <div class="bottomnav-inner">
+    <button class="navitem active" onclick="setView('log')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><circle cx="12" cy="12" r="0.5" fill="currentColor"></circle></svg>
+      <span class="navlabel">Journal</span>
+    </button>
+    <button class="navitem" onclick="setView('day')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="18" y1="20" x2="18" y2="14"></line></svg>
+      <span class="navlabel">Analytics</span>
+    </button>
+    <button class="navitem" title="Calendar view — coming soon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+      <span class="navlabel">Calendar</span>
+    </button>
+    <button class="navitem" title="Settings — coming soon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      <span class="navlabel">Settings</span>
+    </button>
   </div>
 </div>
 
@@ -310,7 +433,6 @@
       <div class="field">
         <label>Outcome</label>
         <select id="fOutcome">
-          <option value="Open">Open</option>
           <option value="Win">Win</option>
           <option value="Loss">Loss</option>
           <option value="BE">Break Even</option>
@@ -338,7 +460,7 @@
 
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-save" onclick="saveEntry()">Save Entry</button>
+      <button class="btn-save" id="btnSave" onclick="saveEntry()">Save Entry</button>
     </div>
   </div>
 </div>
@@ -364,6 +486,7 @@ let customTags = [];
 let selectedTags = [];
 let activeFilter = "All";
 let form = { pair:"XAUUSD", dir:null, sess:null };
+let _editingId = null;
 
 /* ---------- Portable storage layer ----------
    Works three ways, in priority order:
@@ -516,25 +639,55 @@ function pick(kind, val, el){
   if(kind==='dir') el.classList.add(val==='Buy' ? 'dir-buy':'dir-sell');
 }
 
-function openModal(){
+function openModal(entryToEdit){
   document.getElementById('overlay').classList.add('show');
-  document.getElementById('modalTitle').textContent = 'New Trade Setup';
-  form = { pair:"XAUUSD", dir:null, sess:null };
-  selectedTags = [];
-  document.getElementById('fDate').value = new Date().toISOString().slice(0,10);
-  document.getElementById('fTime').value = new Date().toTimeString().slice(0,5);
-  document.getElementById('fOutcome').value = 'Open';
-  document.getElementById('fPnl').value = '';
-  document.getElementById('fNotes').value = '';
+  _editingId = entryToEdit ? entryToEdit.id : null;
+  document.getElementById('modalTitle').textContent = entryToEdit ? 'Edit Trade Setup' : 'New Trade Setup';
+  document.getElementById('btnSave').textContent = entryToEdit ? 'Update Entry' : 'Save Entry';
+  form = entryToEdit
+    ? { pair: entryToEdit.pair, dir: entryToEdit.dir, sess: entryToEdit.sess }
+    : { pair:"XAUUSD", dir:null, sess:null };
+  selectedTags = entryToEdit ? [...entryToEdit.tags] : [];
+  document.getElementById('fDate').value = entryToEdit ? entryToEdit.date : new Date().toISOString().slice(0,10);
+  document.getElementById('fTime').value = entryToEdit ? entryToEdit.time : new Date().toTimeString().slice(0,5);
+  document.getElementById('fOutcome').value = entryToEdit ? entryToEdit.outcome : 'Win';
+  document.getElementById('fPnl').value = entryToEdit ? (Math.abs(entryToEdit.pnl) || '') : '';
+  document.getElementById('fNotes').value = entryToEdit ? entryToEdit.notes : '';
   document.getElementById('customPair').value = '';
   document.getElementById('customPair').style.display = 'none';
   renderPairSeg();
-  const firstPairBtn = document.querySelector('#pairSeg button[data-p="XAUUSD"]');
-  if(firstPairBtn) firstPairBtn.classList.add('sel');
+
+  document.querySelectorAll('#pairSeg button').forEach(b=>b.classList.remove('sel'));
+  const knownPairs = [...DEFAULT_PAIRS, ...customPairs];
+  if(knownPairs.includes(form.pair)){
+    const pairBtn = Array.from(document.querySelectorAll('#pairSeg button')).find(b=>b.dataset.p===form.pair);
+    if(pairBtn) pairBtn.classList.add('sel');
+  } else {
+    const customBtn = document.querySelector('#pairSeg button[data-p="__custom__"]');
+    if(customBtn) customBtn.classList.add('sel');
+    document.getElementById('customPair').style.display = 'block';
+    document.getElementById('customPair').value = form.pair;
+    form.pair = '__custom__';
+  }
+
   document.querySelectorAll('[data-dir], [data-sess]').forEach(b=>b.classList.remove('sel','dir-buy','dir-sell'));
+  if(entryToEdit){
+    const dirBtn = document.querySelector(`[data-dir="${entryToEdit.dir}"]`);
+    if(dirBtn){ dirBtn.classList.add('sel'); dirBtn.classList.add(entryToEdit.dir==='Buy' ? 'dir-buy' : 'dir-sell'); }
+    const sessBtn = document.querySelector(`[data-sess="${entryToEdit.sess}"]`);
+    if(sessBtn) sessBtn.classList.add('sel');
+  }
   renderTagPick();
 }
-function closeModal(){ document.getElementById('overlay').classList.remove('show'); }
+function editEntry(id){
+  const entry = entries.find(e=>e.id===id);
+  if(!entry) return;
+  openModal(entry);
+}
+function closeModal(){
+  document.getElementById('overlay').classList.remove('show');
+  _editingId = null;
+}
 
 async function saveEntry(){
   let pair = form.pair;
@@ -554,8 +707,7 @@ async function saveEntry(){
   const rawPnl = Math.abs(parseFloat(document.getElementById('fPnl').value) || 0);
   const pnl = applyOutcomeSign(rawPnl, outcome);
 
-  const entry = {
-    id: 'e' + Date.now(),
+  const fields = {
     pair, dir: form.dir, sess: form.sess,
     date: document.getElementById('fDate').value,
     time: document.getElementById('fTime').value,
@@ -564,7 +716,14 @@ async function saveEntry(){
     notes: document.getElementById('fNotes').value.trim(),
     tags: [...selectedTags]
   };
-  entries.unshift(entry);
+
+  if(_editingId){
+    const idx = entries.findIndex(e=>e.id===_editingId);
+    if(idx !== -1) entries[idx] = { ...entries[idx], ...fields };
+    _editingId = null;
+  } else {
+    entries.unshift({ id: 'e' + Date.now(), ...fields });
+  }
   await persistEntries();
   closeModal();
   render();
@@ -638,7 +797,12 @@ function renderCards(){
       <div class="card-right">
         <span class="outcome ${e.outcome}">${e.outcome === 'BE' ? 'BREAK EVEN' : e.outcome.toUpperCase()}</span>
         <span class="pnl ${pnlClass}">${fmtPnl(e.pnl)}</span>
-        <button class="del" onclick="confirmDeleteEntry('${e.id}')">Delete</button>
+        <div class="card-actions">
+          <button class="edit-btn" onclick="editEntry('${e.id}')" title="Edit entry">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          </button>
+          <button class="del" onclick="confirmDeleteEntry('${e.id}')">Delete<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+        </div>
       </div>
     </div>`;
   }).join('');
@@ -650,6 +814,22 @@ function escapeHtml(s){
   return d.innerHTML;
 }
 
+let _lastStats = { total:0, winrate:0, pnl:0, be:0 };
+
+function animateNumber(el, from, to, format, duration=700){
+  if(!el) return;
+  const start = performance.now();
+  function tick(now){
+    const p = Math.min((now-start)/duration, 1);
+    const eased = 1 - Math.pow(1-p, 3);
+    const val = from + (to-from)*eased;
+    el.textContent = format(val);
+    if(p < 1) requestAnimationFrame(tick);
+    else el.textContent = format(to);
+  }
+  requestAnimationFrame(tick);
+}
+
 function renderStats(){
   const list = activeFilter==='All' ? entries : entries.filter(e=>e.pair===activeFilter);
   const total = list.length;
@@ -658,14 +838,32 @@ function renderStats(){
   const decided = wins + losses;
   const winrate = decided > 0 ? Math.round((wins/decided)*100) : 0;
   const netPnl = list.reduce((s,e)=>s+e.pnl,0);
-  const openCount = list.filter(e=>e.outcome==='Open').length;
+  const beCount = list.filter(e=>e.outcome==='BE').length;
 
-  document.getElementById('statTotal').textContent = total;
-  document.getElementById('statWinrate').textContent = decided > 0 ? winrate + '%' : '—';
+  animateNumber(document.getElementById('statTotal'), _lastStats.total, total, v=>Math.round(v));
+
+  const winrateEl = document.getElementById('statWinrate');
+  if(decided > 0){
+    animateNumber(winrateEl, _lastStats.winrate, winrate, v=>Math.round(v)+'%');
+  } else {
+    winrateEl.textContent = '—';
+  }
+
   const pnlEl = document.getElementById('statPnl');
-  pnlEl.textContent = fmtPnl(netPnl);
+  animateNumber(pnlEl, _lastStats.pnl, netPnl, v=>fmtPnl(v));
   pnlEl.className = 'stat-value ' + (netPnl > 0 ? 'win' : (netPnl < 0 ? 'loss' : ''));
-  document.getElementById('statOpen').textContent = openCount;
+
+  const pnlIcon = document.getElementById('pnlIcon');
+  if(pnlIcon){
+    pnlIcon.classList.remove('pulse-win','pulse-loss');
+    if(netPnl > 0) pnlIcon.classList.add('pulse-win');
+    else if(netPnl < 0) pnlIcon.classList.add('pulse-loss');
+  }
+
+  animateNumber(document.getElementById('statBE'), _lastStats.be, beCount, v=>Math.round(v));
+
+  _lastStats = { total, winrate: decided > 0 ? winrate : _lastStats.winrate, pnl: netPnl, be: beCount };
+
   document.getElementById('subline').textContent = total === 0
     ? 'No trades logged yet'
     : `${total} entr${total===1?'y':'ies'} logged · ${allPairs().length} pair${allPairs().length===1?'':'s'} tracked`;
@@ -678,10 +876,14 @@ function setView(v){
   document.getElementById('tabDay').classList.toggle('active', v==='day');
   document.getElementById('cardsWrap').style.display = v==='log' ? 'flex' : 'none';
   document.getElementById('dayPage').classList.toggle('show', v==='day');
+  const navItems = document.querySelectorAll('.navitem');
+  if(navItems[0]) navItems[0].classList.toggle('active', v==='log');
+  if(navItems[1]) navItems[1].classList.toggle('active', v==='day');
   render();
 }
 
 const DAY_ORDER = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const WEEKDAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
 function dayNameFromDate(dateStr){
   if(!dateStr) return null;
   const d = new Date(dateStr + 'T00:00:00');
@@ -707,7 +909,7 @@ function renderDayStats(){
     else byDay[d].open++;
   });
 
-  const maxWinrate = Math.max(...DAY_ORDER.map(d=>{
+  const maxWinrate = Math.max(...WEEKDAYS.map(d=>{
     const s = byDay[d];
     const decided = s.wins + s.losses;
     return decided > 0 ? (s.wins/decided)*100 : 0;
@@ -718,7 +920,7 @@ function renderDayStats(){
     return;
   }
 
-  wrap.innerHTML = DAY_ORDER.map(d=>{
+  wrap.innerHTML = WEEKDAYS.map(d=>{
     const s = byDay[d];
     const decided = s.wins + s.losses;
     const winrate = decided > 0 ? Math.round((s.wins/decided)*100) : null;
